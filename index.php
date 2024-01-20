@@ -9,7 +9,7 @@
     <h1>Markdown to HTML Converter</h1>
     <form action="converter.php" method="post">
         <label for="input">Enter Markdown:</label><br>
-        <textarea id="input" name="input" rows="10" cols="50" required></textarea><br>
+        <textarea id="input" name="input" rows="100" cols="100" required></textarea><br>
         <input type="submit" value="Convert">
     </form>
 </body>
