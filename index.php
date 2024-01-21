@@ -4,21 +4,41 @@ error_reporting(E_ALL);
 
 <?php
 function convertMarkdownToHTML($markdown) {
-    // Convert headings
-    $html = preg_replace("/###### (.+)/", "<h6>$1</h6>", $markdown);
-    $html = preg_replace("/## (.+)/", "<h2>$1</h2>", $html);
-    $html = preg_replace("/# (.+)/", "<h1>$1</h1>", $html);
+    // Convert headers
+    $markdown = preg_replace('/^###### (.+)$/m', '<h6>$1</h6>', $markdown);
+    $markdown = preg_replace('/^## (.+)$/m', '<h2>$1</h2>', $markdown);
+    $markdown = preg_replace('/^# (.+)$/m', '<h1>$1</h1>', $markdown);
+
+    // Convert paragraphs
+    $lines = explode("\r", $markdown);
+    $to_convert = [];
+    $concatenatedString = '';
+    foreach ($lines as $line) {
+        if ($line !== "\n") {
+            $concatenatedString .= $line;
+        } else {
+            if ($concatenatedString !== '') {
+                $to_convert[] = $concatenatedString;
+                $concatenatedString = '';
+            }
+        }
+    }
+    if ($concatenatedString !== '') {
+        $to_convert[] = $concatenatedString;
+    }
+    $markdown = '';
+    foreach ($to_convert as $line) {
+        $line = preg_replace('/^(?!(<h[1-6]>)).+$/m', '<p>$0</p>', $line);
+        $markdown .= preg_replace('/<\/p>\n<p>/', ' ', $line);
+    }
 
     // Convert links
-    $html = preg_replace("/\[([^\]]+)\]\(([^)]+)\)/", '<a href="$2">$1</a>', $html);
+    $markdown = preg_replace('/\[([^\]]+)\]\(([^)]+)\)/', '<a href="$2">$1</a>', $markdown);
 
     // Handle ellipsis
-    $html = preg_replace("/\.\.\./", "&hellip;", $html);
+    $markdown = preg_replace('/\.{3}/', "...", $markdown);
 
-    // Convert unformatted text to paragraphs
-    $html = "<p>" . nl2br($html) . "</p>";
-
-    return $html;    
+    return $markdown;
 }
 
 $input = "";
@@ -50,10 +70,12 @@ var_dump($_POST);
     <h2>HTML Output</h2>
     <?php
     if (!empty($output)) {
-        echo $output;
+        echo nl2br(htmlspecialchars($output));
     } else {
         echo "<p>No input!</p>";
     }
     ?>
 </body>
 </html>
+
+
