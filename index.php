@@ -15,6 +15,9 @@ function convertMarkdownToHTML($markdown) {
     // Handle ellipsis
     $html = preg_replace("/\.\.\./", "&hellip;", $html);
 
+    // Convert unformatted text to paragraphs
+    $html = "<p>" . nl2br($html) . "</p>";
+
     return $html;    
 }
 
