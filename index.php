@@ -1,3 +1,23 @@
+<!-- index.php -->
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+<?php
+function convertMarkdownToHTML($markdown) {
+    return $markdown;
+}
+
+$input = "";
+$output = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $input = $_POST["input"];
+    $output = convertMarkdownToHTML($input);
+}
+
+var_dump($_POST);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +27,19 @@
 </head>
 <body>
     <h1>Markdown to HTML Converter</h1>
-    <form action="converter.php" method="post">
+    <form action="" method="post">
         <label for="input">Enter Markdown:</label><br>
-        <textarea id="input" name="input" rows="50" cols="100" required></textarea><br>
+        <textarea id="input" name="input" rows="10" cols="50" required><?php echo $input; ?></textarea><br>
         <input type="submit" value="Convert">
     </form>
+
+    <h2>HTML Output</h2>
+    <?php
+    if (!empty($output)) {
+        echo $output;
+    } else {
+        echo "<p>No input!</p>";
+    }
+    ?>
 </body>
 </html>
