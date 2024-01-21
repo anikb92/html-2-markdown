@@ -4,7 +4,13 @@ error_reporting(E_ALL);
 
 <?php
 function convertMarkdownToHTML($markdown) {
-    return $markdown;
+    // Convert headings
+    $html = preg_replace("/###### (.+)/", "<h6>$1</h6>", $markdown);
+    $html = preg_replace("/## (.+)/", "<h2>$1</h2>", $html);
+    $html = preg_replace("/# (.+)/", "<h1>$1</h1>", $html);
+
+
+    return $html;    
 }
 
 $input = "";
