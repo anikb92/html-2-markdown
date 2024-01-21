@@ -9,6 +9,9 @@ function convertMarkdownToHTML($markdown) {
     $html = preg_replace("/## (.+)/", "<h2>$1</h2>", $html);
     $html = preg_replace("/# (.+)/", "<h1>$1</h1>", $html);
 
+    // Convert links
+    $html = preg_replace("/\[([^\]]+)\]\(([^)]+)\)/", '<a href="$2">$1</a>', $html);
+
     // Handle ellipsis
     $html = preg_replace("/\.\.\./", "&hellip;", $html);
 
